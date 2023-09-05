@@ -13,51 +13,36 @@ public class q1300_H {
         약수 문제인가. k까지 linear하게 갈건데 n보다 큰 소수는 제끼고 그보다 작은 경우는 n보다 작은 약수가 존재하는지 체크하면서 간다.
 
         이분탐색 문제라는데 어떻게 접근하는건지 모르겠다.
+        B[k]=x 일때 k를 구하는건 쉽기때문에
+        x로 k에 들어올 값을 구하는게 쉽기 때문에 역으로 x를 이분탐색으로 찾는다.
+        여기서 중요한것은. left right가 있을때 left right를 조정하는 방법인데...
+        B[low~high]=x 이다.
+        여기서 high를 찾는건 매우쉽다.
+        cnt+=Math.min(x/i,n); 를 n까지 다 돌려주면 구할 수 있기떄문에. 쉽다.
      */
     static int n,k;
-    static Set<Integer> set=new HashSet<>();
+    static int ans;
     public static void main(String[] args) {
         Scanner sc= new Scanner(System.in);
         n=sc.nextInt();
         k=sc.nextInt();
-        int cnt=0;
-        int ans=0;
 
-        prime();
+        long left=1;
+        long right=k;
+        long ans=0;
 
-
-        for(int i=1;i<1000000000;i++){
-            if(i>n&&set.contains(i)) continue;
-            if(i>n*n) break;
-            for(int j=1;j*j<=i;j++){
-                if(j>n) break;
-                if(i/j>n) continue;
-                if(j*j==i) cnt++;
-                else if(i%j==0) cnt+=2;
+        while(left<right){
+            long mid=(left+right)/2;
+            long cnt=0;
+            for(int i=1;i<=n;i++){
+                cnt+=Math.min(mid/i,n);
             }
-            if(cnt>=k){
-                ans=i;
-                break;
+            if(cnt<k){
+                left=mid+1;
+            }else{
+                right=mid;
             }
         }
-        System.out.println(ans);
-
-
-    }
-
-    private static void prime() {
-        boolean[] v=new boolean[100000];
-        v[0]=true;
-        v[1]=true;
-
-        for(int i=2;i*i<=100000;i++){
-            if(!v[i]){
-                set.add(i);
-                for(int j=i*i;j<100000;j+=i){
-                    v[j]=true;
-                }
-            }
-        }
-
+        System.out.println(left);
     }
 }
